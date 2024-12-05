@@ -19,22 +19,43 @@ with open("testSchools.csv", mode='r') as file:
         name_value = row["Name"]
         
         # This prompt needs to be worked on sometimes it outputs the wrong format and that will error out in airtable
-        prompt = f"Find the Principal of {name_value} in Prince George County and extract their title, first name, last name, email. If there is no principal, find the coordinating supervisor or assistant. I need this to be presented as csv row with the school name, school district, school type (high,middle,elementary), courtesy title (mr,dr,ms), first name, last name, email address, title (principal, coordinating supervisor, neither). If any of the values are not avaible the write NA for that field. Only output the csv string and nothing else. "
-        prompt = eval(f"f'{prompt}'")
 
+        # Refined prompt to ensure correct and clean output
+        prompt = f"""
+        Find the principal of {name_value} in Prince George's County and extract the following information: 
+        their title, first name, last name, and email address. If there is no principal, locate the coordinating 
+        supervisor or assistant and provide their details instead. Present the output as a single CSV row with 
+        the following fields:
+
+        - School name
+        - School district
+        - School type (high, middle, elementary)
+        - Courtesy title (e.g., Mr, Dr, Ms)
+        - First name
+        - Last name
+        - Email address
+        - Title (Principal, Assistant Principal, etc.)
+
+        Guidelines:
+        1. If a value is unavailable, write 'NA' for that field.
+        2. Do not include any notes, explanations, or citations.
+        3. Only provide the CSV row formatted as follows, with no additional information:
+
+        Example Output:
+        Largo High School, Prince George's County Public Schools, high, Mr, Albert, Lewis, Albert.Lewis@pgcps.org, Principal
+        """
+
+        # Prepare messages for API request
         messages = [
             {
                 "role": "system",
                 "content": (
-                    "You are an artificial intelligence assistant and you need to"
-                    "engage in a helpful, detailed, polite conversation with a user."
+                    "You are a highly structured assistant. Only respond with clean CSV-formatted rows as requested."
                 ),
             },
-            {   
+            {
                 "role": "user",
-                "content": (
-                    prompt
-                ),
+                "content": prompt,
             },
         ]
 
