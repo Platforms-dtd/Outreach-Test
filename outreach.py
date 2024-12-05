@@ -1,9 +1,15 @@
 from openai import OpenAI
 import csv
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+# Access the variables
+PERPLEXITY_API_KEY = os.getenv('PERPLEXITY_API_KEY')
 
 file_name = input("Input your CSV file name, make sure its in the same folder as this python script: ")
 
-YOUR_API_KEY = "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"
 csv_objects = []
 
 with open("testSchools.csv", mode='r') as file:
@@ -32,7 +38,7 @@ with open("testSchools.csv", mode='r') as file:
             },
         ]
 
-        client = OpenAI(api_key=YOUR_API_KEY, 
+        client = OpenAI(api_key=PERPLEXITY_API_KEY, 
         base_url="https://api.perplexity.ai")
 
         # chat completion without streaming
